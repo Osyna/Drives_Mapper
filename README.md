@@ -24,5 +24,7 @@ Launch it then:
 ## Usage Example
 
 `mapper = DrivesMapper("files.db")
+
 `mapper.scan_drive("D:/")
+
 `mapper.export_to_csv("files.csv")

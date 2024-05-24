@@ -7,7 +7,7 @@ only use one external library tqdm
 
 Launch it then:
 > 2024-05-24 17:10:52,310 - INFO - Scanning path: D:/
-
+> 
 > 2024-05-24 17:10:52,316 - INFO - Database initialized successfully.
 > 
 > Writing to Database: 122267 files [00:09, 12867.91 files/s]

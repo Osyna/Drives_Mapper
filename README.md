@@ -5,6 +5,17 @@ Pretty simple
 A super fast tool to map a drive / network drive, get filenames, filepaths, extensions, size and  'tags' based on the files tree
 only use one external library tqdm
 
+
+
+
+## Usage Example
+
+```
+mapper = DrivesMapper("files.db") # db file used to store the files informations
+mapper.scan_drive("D:/") # Drive to Scan
+mapper.export_to_csv("files.csv") # To export to a CSV FILE
+```
+
 Launch it then:
 > 2024-05-24 17:10:52,310 - INFO - Scanning path: D:/
 > 
@@ -19,12 +30,3 @@ Launch it then:
 > 2024-05-24 17:11:01,898 - INFO - Total execution time: 9.59 seconds
 > 
 > 2024-05-24 17:11:02,796 - INFO - Database exported to CSV: files.csv
-
-
-## Usage Example
-
-```
-mapper = DrivesMapper("files.db") # db file used to store the files informations
-mapper.scan_drive("D:/") # Drive to Scan
-mapper.export_to_csv("files.csv") # To export to a CSV FILE
-```

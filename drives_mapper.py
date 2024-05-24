@@ -195,7 +195,3 @@ class DrivesMapper:
         tags.extend([''] * (self.max_tags - len(tags)))  # Pad the list to ensure it has max_tags elements
         return tuple(tags)
 
-if __name__ == "__main__":
-    mapper = DrivesMapper("files.db")
-    mapper.scan_drive("D:/")
-    mapper.export_to_csv("files.csv")

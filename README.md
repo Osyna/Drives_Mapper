@@ -19,3 +19,10 @@ Launch it then:
 > 2024-05-24 17:11:01,898 - INFO - Total execution time: 9.59 seconds
 > 
 > 2024-05-24 17:11:02,796 - INFO - Database exported to CSV: files.csv
+
+
+`
+mapper = DrivesMapper("files.db")
+mapper.scan_drive("D:/")
+mapper.export_to_csv("files.csv")
+`

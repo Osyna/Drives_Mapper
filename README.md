@@ -23,9 +23,8 @@ Launch it then:
 
 ## Usage Example
 
-``mapper = DrivesMapper("files.db") # db file used to store the files informations
-
+```
+mapper = DrivesMapper("files.db") # db file used to store the files informations
 mapper.scan_drive("D:/") # Drive to Scan
-
 mapper.export_to_csv("files.csv") # To export to a CSV FILE
-``
+```

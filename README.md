@@ -9,7 +9,7 @@ The DrivesMapper class is responsible for scanning a drive or directory and coll
 The file information is stored in an SQLite database.
 The class provides methods to initialize the database, store files in the database, scan files in a directory, and export the database contents to a CSV file.
 
-- The class uses multithreading to scan files in parallel and store them in the database efficiently.
+The class uses multithreading to scan files in parallel and store them in the database efficiently.
 
 - The generate_tags method generates tags based on the file path, which are stored in the database along with other file information.
 

@@ -4,7 +4,6 @@ import csv
 import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from queue import Queue
-from tqdm import tqdm
 import time
 from pathlib import Path
 import threading
@@ -64,8 +63,6 @@ class DrivesMapper:
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        pbar = tqdm(total=self.total_files, desc="Writing to Database", unit=" files")
-
         batch = []
         while True:
             file_info = file_queue.get()
@@ -74,14 +71,11 @@ class DrivesMapper:
                 if batch:
                     cursor.executemany(f"INSERT OR IGNORE INTO files VALUES ({', '.join(['?'] * (4 + self.max_tags))})", batch)
                     conn.commit()
-                    pbar.update(len(batch))
-                pbar.close()
                 break
             batch.append(file_info)
             if len(batch) >= batch_size:
                 cursor.executemany(f"INSERT OR IGNORE INTO files VALUES ({', '.join(['?'] * (4 + self.max_tags))})", batch)
                 conn.commit()
-                pbar.update(len(batch))
                 batch.clear()
             file_queue.task_done()
 
@@ -139,6 +133,8 @@ class DrivesMapper:
         db_writer_thread = threading.Thread(target=self.store_files, args=(file_queue, batch_size))
         db_writer_thread.start()
 
+        logger.info("Scanning files and storing in the database...")
+
         # Scan files in parallel using ThreadPoolExecutor
         with ThreadPoolExecutor(max_workers=num_threads) as executor:
             futures = []
@@ -195,3 +191,7 @@ class DrivesMapper:
         tags.extend([''] * (self.max_tags - len(tags)))  # Pad the list to ensure it has max_tags elements
         return tuple(tags)
 
+if __name__ == "__main__":
+    mapper = DrivesMapper("files.db")
+    mapper.scan_drive("D:/")
+    mapper.export_to_csv("files.csv")

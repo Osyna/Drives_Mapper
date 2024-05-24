@@ -21,8 +21,12 @@ Launch it then:
 > 2024-05-24 17:11:02,796 - INFO - Database exported to CSV: files.csv
 
 
+## Usage Example
+
 `
 mapper = DrivesMapper("files.db")
+
 mapper.scan_drive("D:/")
+
 mapper.export_to_csv("files.csv")
 `

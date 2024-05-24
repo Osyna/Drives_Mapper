@@ -1,8 +1,7 @@
 # Drives_Mapper
 Map your network drives with python
 
-Pretty simple
-A super fast tool to map a drive / network drive, get filenames, filepaths, extensions, sizes and  'tags' based on the files tree
+A Pretty simple and super fast tool to map a drive / network drive, get filenames, filepaths, extensions, sizes and  'tags' based on the files tree
 It only use default python libraries 
 
 

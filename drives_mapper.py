@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+
+# Title: Drives Mapper
+# Author: Heslan Irvin
+# Date: 20-05-2024
+# Description: A class for scanning a drive or directory and collecting file information, storing the collected data in an SQLite database.
+
+# This file is placed in the public domain or under the
+# CC0-1.0-Universal license, whichever is more permissive.
+
 import os
 import sqlite3
 import csv
@@ -134,7 +144,6 @@ class DrivesMapper:
         db_writer_thread.start()
 
         logger.info("Scanning files and storing in the database...")
-
         # Scan files in parallel using ThreadPoolExecutor
         with ThreadPoolExecutor(max_workers=num_threads) as executor:
             futures = []
@@ -190,6 +199,7 @@ class DrivesMapper:
         tags = [str(part) for part in parts[:self.max_tags]]
         tags.extend([''] * (self.max_tags - len(tags)))  # Pad the list to ensure it has max_tags elements
         return tuple(tags)
+
 
 if __name__ == "__main__":
     mapper = DrivesMapper("files.db")

@@ -28,19 +28,17 @@ class DrivesMapper:
     storing the collected data in an SQLite database.
     """
 
-    def __init__(self, db_path, max_tags=10):
+    def __init__(self, db_path):
         """
         Initializes the DrivesMapper instance.
 
         Args:
             db_path (str): The path to the SQLite database file.
-            max_tags (int): The maximum number of tag columns.
         """
         self.db_path = db_path
         self.file_count = 0
         self.lock = threading.Lock()
         self.total_files = 0
-        self.max_tags = max_tags  # Maximum number of tag columns
 
     def initialize_database(self):
         """
@@ -49,15 +47,15 @@ class DrivesMapper:
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         # Create table with dynamic tag columns
-        columns = ', '.join([f'tag_{i} TEXT' for i in range(1, self.max_tags + 1)])
-        cursor.execute(f'''
+        query = f'''
             CREATE TABLE IF NOT EXISTS files (
                 name TEXT, 
                 fullpath TEXT UNIQUE, 
                 extension TEXT, 
-                size INTEGER, 
-                {columns}
-            )''')
+                size INTEGER
+            )'''
+
+        cursor.execute(query)
         conn.commit()
         conn.close()
         logger.info("Database initialized successfully.")
@@ -74,17 +72,19 @@ class DrivesMapper:
         cursor = conn.cursor()
 
         batch = []
+
+        query = f"INSERT OR IGNORE INTO files VALUES ({', '.join(['?'] * 4)})"
+
         while True:
             file_info = file_queue.get()
             if file_info is None:
                 # Finalize any remaining files in the queue
-                if batch:
-                    cursor.executemany(f"INSERT OR IGNORE INTO files VALUES ({', '.join(['?'] * (4 + self.max_tags))})", batch)
-                    conn.commit()
+                cursor.executemany(query, batch)
+                conn.commit()
                 break
             batch.append(file_info)
             if len(batch) >= batch_size:
-                cursor.executemany(f"INSERT OR IGNORE INTO files VALUES ({', '.join(['?'] * (4 + self.max_tags))})", batch)
+                cursor.executemany(query, batch)
                 conn.commit()
                 batch.clear()
             file_queue.task_done()
@@ -102,6 +102,11 @@ class DrivesMapper:
         """
         for filename in filenames:
             full_path = Path(dirpath) / filename
+            full_path = os.path.abspath(full_path)
+            if full_path.startswith(u"\\\\"):
+                full_path = u"\\\\?\\UNC\\" + full_path[2:]
+            full_path = Path(u"\\\\?\\" + full_path)
+
             try:
                 file_size = full_path.stat().st_size
             except (FileNotFoundError, OSError):
@@ -109,13 +114,12 @@ class DrivesMapper:
                 continue
 
             _, file_extension = os.path.splitext(filename)
-            tags = self.generate_tags(str(full_path))
+
             file_info = (
                 filename,
                 str(full_path),
                 file_extension,
-                file_size,
-                *tags
+                file_size
             )
             file_queue.put(file_info)
             with self.lock:
@@ -178,28 +182,11 @@ class DrivesMapper:
 
         with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
             csv_writer = csv.writer(csvfile)
-            csv_writer.writerow(['Name', 'Fullpath', 'Extension', 'Size'] + [f'tag_{i}' for i in range(1, self.max_tags + 1)])
+            csv_writer.writerow(['Name', 'Fullpath', 'Extension', 'Size'])
             csv_writer.writerows(rows)
 
         conn.close()
         logger.info(f"Database exported to CSV: {csv_path}")
-
-    def generate_tags(self, fullpath):
-        """
-        Generate tags based on the file path.
-
-        Args:
-            fullpath (str): The full path of the file.
-
-        Returns:
-            tuple: Generated tags as a tuple with a fixed number of elements.
-        """
-        path = Path(fullpath)
-        parts = path.parts
-        tags = [str(part) for part in parts[:self.max_tags]]
-        tags.extend([''] * (self.max_tags - len(tags)))  # Pad the list to ensure it has max_tags elements
-        return tuple(tags)
-
 
 if __name__ == "__main__":
     mapper = DrivesMapper("files.db")

@@ -1,0 +1,16 @@
+[package]
+name = "drive_scanner"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rayon = "1.5"
+rusqlite = { version = "0.31.0", features = ["bundled"] }
+walkdir = "2.3"
+pyo3 = { version = "0.18", features = ["extension-module"] }
+chrono = "0.4"
+
+[lib]
+name = "file_scanner"
+crate-type = ["cdylib"]
+

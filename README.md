@@ -2,7 +2,7 @@
 
 Drop file_scanner.pyd at same location of your script, its already compiled so no need of rust+cargo install
 For a Full Scan of C whith millions of files and folder/subfolders in less than 1 minutes.
-The full code will be drop soon 
+The full rust code will be drop soon 
 
 ```
 then use the following code 

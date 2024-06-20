@@ -120,7 +120,7 @@ fn scan_and_save(root: String, db_path: String, batch_size: usize) -> PyResult<(
 }
 
 #[pymodule]
-fn file_scanner(_py: Python, m: &PyModule) -> PyResult<()> {
+fn drive_mapper(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(scan_and_save, m)?)?;
     m.add_class::<FileInfo>()?;
     Ok(())

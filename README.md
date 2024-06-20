@@ -1,18 +1,18 @@
 # Update Even Faster now thank to ... Rust it destroy any python libraries
 
-Drop file_scanner.pyd at same location of your script, its already compiled so no need of rust+cargo install
+Drop drive_mapper.pyd at same location of your script, its already compiled so no need of rust+cargo install
 For a Full Scan of C whith millions of files and folder/subfolders in less than 1 minutes.
-The full rust code will be drop soon 
+
 
 then use the following code :
 ```
 
-import file_scanner
+import drive_mapper
 import time
 
 # Define the root directory to scan, the path for the SQLite database, and the batch size
 root_directory = 'C:\\'
-db_path = 'C:\\Users\\Irvin\\Desktop\\drive_scanner\\database.db'
+db_path = 'C:\\Users\\Irvin\\Desktop\\drive_mapper\\database.db'
 batch_size = 1000
 
 # Start timing the scan
@@ -20,7 +20,7 @@ start_time = time.time()
 
 print("Scanning files...")
 # Call the scan_and_save function
-file_scanner.scan_and_save(root_directory, db_path, batch_size)
+drive_mapper.scan_and_save(root_directory, db_path, batch_size)
 
 # Calculate and print the elapsed time
 elapsed_time = time.time() - start_time

@@ -22,6 +22,35 @@ The class uses multithreading to scan files in parallel and store them in the da
 The DrivesMapper class can be used to scan a drive or directory, store file information in an SQLite database, and export the database contents to a CSV file.
 The class can be extended to add more functionality or customize the scanning process as needed.
 
+# Update Even Faster now thank to ... Rust it destroy any python libraries
+
+Drop file_scanner.pyd at same location of your script.
+For a Full Scan of C whith millions of files and folder/subfolders in less than 1 minutes.
+
+```
+then use the following code 
+import file_scanner
+import time
+
+# Define the root directory to scan, the path for the SQLite database, and the batch size
+root_directory = 'C:\\'
+db_path = 'C:\\Users\\Irvin\\Desktop\\drive_scanner\\database.db'
+batch_size = 1000
+
+# Start timing the scan
+start_time = time.time()
+
+print("Scanning files...")
+# Call the scan_and_save function
+file_scanner.scan_and_save(root_directory, db_path, batch_size)
+
+# Calculate and print the elapsed time
+elapsed_time = time.time() - start_time
+print(f"Scan completed and data saved to the database. Time taken: {elapsed_time:.2f} seconds.")
+```
+
+
+
 
 ## Usage Example
 
